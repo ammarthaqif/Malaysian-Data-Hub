@@ -1,0 +1,6 @@
+{
+  "name": "Malaysia Open Data Explorer",
+  "description": "A centralized open data portal integrating developer.data.gov.my open APIs into a unified dashboard with real-time streaming, socioeconomic indicator charts, comparative trends, and exportable reports.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
