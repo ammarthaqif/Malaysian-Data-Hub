@@ -14,6 +14,9 @@ export default defineConfig(() => {
         '@': path.resolve(__dirname, '.'),
       },
     },
+    optimizeDeps: {
+      include: ['react-is', 'recharts'],
+    },
     build: {
       chunkSizeWarningLimit: 1200,
     },
