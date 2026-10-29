@@ -1,5 +1,6 @@
 import React from 'react';
-import { FileText, Radio, Sparkles, MapPin, BrainCircuit, Activity } from 'lucide-react';
+import { FileText, Radio, Sparkles, MapPin, BrainCircuit, Activity, Globe } from 'lucide-react';
+import { Language, TRANSLATIONS } from '../data/translations';
 
 export type NavTab =
   | 'overview'
@@ -17,6 +18,8 @@ interface HeaderProps {
   setActiveTab: (tab: NavTab) => void;
   onOpenReportModal: () => void;
   isStreamingActive: boolean;
+  language: Language;
+  onToggleLanguage: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -24,10 +27,14 @@ export const Header: React.FC<HeaderProps> = ({
   setActiveTab,
   onOpenReportModal,
   isStreamingActive,
+  language,
+  onToggleLanguage,
 }) => {
+  const t = TRANSLATIONS[language];
+
   return (
     <header className="sticky top-0 z-40 bg-slate-950/90 backdrop-blur-md border-b border-slate-800">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
         {/* Zone 1: Brand wordmark (single text element) */}
         <div className="flex items-center gap-3 shrink-0">
           <button
@@ -35,11 +42,11 @@ export const Header: React.FC<HeaderProps> = ({
             className="text-left font-bold text-lg tracking-tight text-white flex items-center gap-2 hover:opacity-90 transition-opacity"
           >
             <span className="w-2.5 h-2.5 rounded-sm bg-amber-400 rotate-45 inline-block" />
-            <span className="whitespace-nowrap">data.gov.my Explorer</span>
+            <span className="whitespace-nowrap">{t.brandName}</span>
           </button>
         </div>
 
-        {/* Zone 2: Single-line navigation links */}
+        {/* Zone 2: Navigation Links */}
         <nav className="hidden xl:flex items-center gap-4 text-sm font-medium">
           <button
             onClick={() => setActiveTab('overview')}
@@ -49,7 +56,7 @@ export const Header: React.FC<HeaderProps> = ({
                 : 'text-slate-400 hover:text-slate-200'
             }`}
           >
-            Overview
+            {t.navOverview}
           </button>
 
           <button
@@ -61,7 +68,7 @@ export const Header: React.FC<HeaderProps> = ({
             }`}
           >
             <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-            <span>Daily Digest</span>
+            <span>{t.navDigest}</span>
           </button>
 
           <button
@@ -72,7 +79,7 @@ export const Header: React.FC<HeaderProps> = ({
                 : 'text-slate-400 hover:text-slate-200'
             }`}
           >
-            Catalogue
+            {t.navCatalogue}
           </button>
 
           <button
@@ -83,7 +90,7 @@ export const Header: React.FC<HeaderProps> = ({
                 : 'text-slate-400 hover:text-slate-200'
             }`}
           >
-            Indicators
+            {t.navIndicators}
           </button>
 
           <button
@@ -95,7 +102,7 @@ export const Header: React.FC<HeaderProps> = ({
             }`}
           >
             <MapPin className="w-3.5 h-3.5 text-amber-400" />
-            <span>Map</span>
+            <span>{t.navMap}</span>
           </button>
 
           <button
@@ -107,7 +114,7 @@ export const Header: React.FC<HeaderProps> = ({
             }`}
           >
             <BrainCircuit className="w-3.5 h-3.5 text-emerald-400" />
-            <span>AI Forecast</span>
+            <span>{t.navAiForecast}</span>
           </button>
 
           <button
@@ -118,7 +125,7 @@ export const Header: React.FC<HeaderProps> = ({
                 : 'text-slate-400 hover:text-slate-200'
             }`}
           >
-            Compare
+            {t.navCompare}
           </button>
 
           <button
@@ -130,7 +137,7 @@ export const Header: React.FC<HeaderProps> = ({
             }`}
           >
             <Radio className={`w-3.5 h-3.5 ${isStreamingActive ? 'text-emerald-400 animate-pulse' : 'text-slate-500'}`} />
-            <span>Stream</span>
+            <span>{t.navStream}</span>
           </button>
 
           <button
@@ -142,18 +149,28 @@ export const Header: React.FC<HeaderProps> = ({
             }`}
           >
             <Activity className="w-3.5 h-3.5 text-emerald-400" />
-            <span>API Health</span>
+            <span>{t.navApiHealth}</span>
           </button>
         </nav>
 
-        {/* Zone 3: 1 primary action */}
-        <div className="flex items-center gap-3 shrink-0">
+        {/* Zone 3: Language Toggle & Primary Action */}
+        <div className="flex items-center gap-2.5 shrink-0">
+          {/* Language Switcher (EN / BM) */}
+          <button
+            onClick={onToggleLanguage}
+            className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-mono font-bold bg-slate-900 border border-slate-700 hover:border-slate-600 rounded-lg text-slate-200 transition-colors"
+            title="Switch Language / Tukar Bahasa"
+          >
+            <Globe className="w-3.5 h-3.5 text-amber-400" />
+            <span>{language.toUpperCase()}</span>
+          </button>
+
           <button
             onClick={onOpenReportModal}
-            className="flex items-center gap-2 px-3.5 py-1.5 text-xs font-semibold text-slate-950 bg-amber-400 rounded-lg hover:bg-amber-300 transition-colors whitespace-nowrap shrink-0 shadow-sm"
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-950 bg-amber-400 rounded-lg hover:bg-amber-300 transition-colors whitespace-nowrap shadow-sm"
           >
             <FileText className="w-3.5 h-3.5 text-slate-950" />
-            <span>Export Report</span>
+            <span>{t.exportReport}</span>
           </button>
         </div>
       </div>

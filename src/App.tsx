@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Header, NavTab } from './components/Header';
 import { OverviewHero } from './components/OverviewHero';
+import { CitizenQuickAnswers } from './components/CitizenQuickAnswers';
 import { DailyDigestCard } from './components/DailyDigestCard';
 import { CatalogueView } from './components/CatalogueView';
 import { IndicatorsView } from './components/IndicatorsView';
@@ -11,6 +12,7 @@ import { RealTimeStreamView } from './components/RealTimeStreamView';
 import { ApiHealthView } from './components/ApiHealthView';
 import { ReportExportModal } from './components/ReportExportModal';
 import { RealtimeStreamEvent } from './types/dataset';
+import { Language, TRANSLATIONS } from './data/translations';
 import { subscribeToRealtimeStream, getDatasetsList, getWeatherWarnings } from './services/api';
 import {
   ExternalLink,
@@ -25,11 +27,12 @@ import {
   ShieldCheck,
   Info,
   Activity,
-  Zap,
+  Heart,
 } from 'lucide-react';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<NavTab>('overview');
+  const [language, setLanguage] = useState<Language>('en');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [comparedIds, setComparedIds] = useState<string[]>(['ron97', 'cpi_headline']);
   const [reportModalOpen, setReportModalOpen] = useState<boolean>(false);
@@ -40,6 +43,8 @@ export default function App() {
   const [events, setEvents] = useState<RealtimeStreamEvent[]>([]);
   const [catalogCount, setCatalogCount] = useState<number>(355);
   const [liveWeatherAlertsCount, setLiveWeatherAlertsCount] = useState<number>(2);
+
+  const t = TRANSLATIONS[language];
 
   // Subscribe to real-time telemetry stream
   useEffect(() => {
@@ -96,6 +101,10 @@ export default function App() {
     setActiveTab('catalogue');
   };
 
+  const toggleLanguage = () => {
+    setLanguage((prev) => (prev === 'en' ? 'bm' : 'en'));
+  };
+
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-amber-400 selection:text-slate-950">
       {/* Top Bar Header */}
@@ -104,18 +113,30 @@ export default function App() {
         setActiveTab={setActiveTab}
         onOpenReportModal={() => setReportModalOpen(true)}
         isStreamingActive={isStreaming}
+        language={language}
+        onToggleLanguage={toggleLanguage}
       />
 
       {/* Main Content Area */}
       <main className="flex-1">
         {activeTab === 'overview' && (
-          <div className="space-y-12">
+          <div className="space-y-10">
+            {/* Hero Banner with Search */}
             <OverviewHero
               onSearch={handleHeroSearch}
               onNavigateTab={setActiveTab}
               catalogCount={catalogCount}
               liveWeatherAlertsCount={liveWeatherAlertsCount}
+              language={language}
             />
+
+            {/* Citizen Quick Answers Widget - Specifically for the General Public */}
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <CitizenQuickAnswers
+                language={language}
+                onNavigateToTab={setActiveTab}
+              />
+            </div>
 
             {/* Daily Digest Section on Overview */}
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -125,12 +146,12 @@ export default function App() {
             {/* Platform Feature Workspaces Grid */}
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="flex items-center gap-2 text-xs text-slate-400 mb-2">
-                <span>Unified Malaysian Open Data Capabilities</span>
+                <span>{language === 'en' ? 'Explore Open Data Workspaces' : 'Terokai Ruang Kerja Data Terbuka'}</span>
                 <span aria-hidden="true">·</span>
-                <span>developer.data.gov.my Open Architecture</span>
+                <span>developer.data.gov.my</span>
               </div>
               <h2 className="text-xl font-bold text-white mb-6">
-                Integrated Analytical Workspaces
+                {language === 'en' ? 'Integrated Public Analytics Workspaces' : 'Ruang Kerja Analisis Awam Bersepadu'}
               </h2>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
@@ -142,10 +163,12 @@ export default function App() {
                     <Database className="w-5 h-5" />
                   </div>
                   <h3 className="text-base font-bold text-white mb-1 group-hover:text-amber-400 transition-colors">
-                    Dataset Catalogue ({catalogCount}+)
+                    {language === 'en' ? `Dataset Catalogue (${catalogCount}+)` : `Katalog Data (${catalogCount}+)`}
                   </h3>
                   <p className="text-xs text-slate-400 leading-relaxed">
-                    Search and query datasets across DOSM, MOF, JPJ, PDRM, and JPN with interactive API inspectors and code generators.
+                    {language === 'en'
+                      ? 'Search and query datasets across DOSM, MOF, JPJ, PDRM, and JPN with interactive API inspectors.'
+                      : 'Cari dan semak set data daripada pelbagai kementerian dengan penganalisis API interaktif.'}
                   </p>
                 </div>
 
@@ -157,10 +180,12 @@ export default function App() {
                     <MapPin className="w-5 h-5" />
                   </div>
                   <h3 className="text-base font-bold text-white mb-1 group-hover:text-sky-400 transition-colors">
-                    Regional Choropleth Map
+                    {language === 'en' ? 'Regional Choropleth Map' : 'Peta Wilayah & Negeri'}
                   </h3>
                   <p className="text-xs text-slate-400 leading-relaxed">
-                    Explore household incomes, Gini inequality ratios, and population distribution across all 16 Malaysian states.
+                    {language === 'en'
+                      ? 'Explore household incomes, Gini inequality ratios, and population distribution across all 16 states.'
+                      : 'Ketahui pendapatan median, jurang Gini, dan jumlah penduduk merentasi semua 16 negeri & wilayah.'}
                   </p>
                 </div>
 
@@ -172,10 +197,12 @@ export default function App() {
                     <BrainCircuit className="w-5 h-5" />
                   </div>
                   <h3 className="text-base font-bold text-white mb-1 group-hover:text-emerald-400 transition-colors">
-                    AI Trend Projections
+                    {language === 'en' ? 'AI Trend Projections' : 'Ramalan Aliran AI'}
                   </h3>
                   <p className="text-xs text-slate-400 leading-relaxed">
-                    Gemini API machine learning macroeconomic trajectories, confidence intervals, and policy insights.
+                    {language === 'en'
+                      ? 'Gemini API machine learning macroeconomic trajectories, confidence intervals, and policy insights.'
+                      : 'Unjuran trajektori ekonomi berasaskan kecerdasan buatan Gemini API dengan julat keyakinan.'}
                   </p>
                 </div>
 
@@ -187,10 +214,12 @@ export default function App() {
                     <Activity className="w-5 h-5" />
                   </div>
                   <h3 className="text-base font-bold text-white mb-1 group-hover:text-emerald-400 transition-colors">
-                    API Health Monitor
+                    {language === 'en' ? 'API Health Monitor' : 'Status Kesihatan API'}
                   </h3>
                   <p className="text-xs text-slate-400 leading-relaxed">
-                    Real-time status, latency tracker, HTTP response codes, and probe sparklines across all official open data endpoints.
+                    {language === 'en'
+                      ? 'Real-time status, latency tracker, HTTP response codes, and probe sparklines across open data endpoints.'
+                      : 'Pemantau kependaman milisaat dan kelancaran sambungan ke pelayan data.gov.my secara langsung.'}
                   </p>
                 </div>
               </div>
@@ -317,7 +346,7 @@ export default function App() {
           <div className="flex items-center gap-2">
             <span className="font-semibold text-slate-300">Malaysia Open Data Explorer</span>
             <span aria-hidden="true">·</span>
-            <span>Developed by <strong className="text-amber-400 font-medium">Ammar Thaqif</strong></span>
+            <span>{t.developedBy} <strong className="text-amber-400 font-medium">Ammar Thaqif</strong></span>
             <span aria-hidden="true">·</span>
             <span className="text-[11px] text-slate-500">ammarthaqif.ar@gmail.com</span>
           </div>
@@ -328,14 +357,14 @@ export default function App() {
               className="hover:text-emerald-400 transition-colors flex items-center gap-1 text-slate-400"
             >
               <Activity className="w-3.5 h-3.5" />
-              <span>API Health Status</span>
+              <span>{language === 'en' ? 'API Health' : 'Status API'}</span>
             </button>
             <button
               onClick={() => setAboutModalOpen(true)}
               className="hover:text-amber-400 transition-colors flex items-center gap-1"
             >
               <Info className="w-3.5 h-3.5" />
-              <span>Platform Info</span>
+              <span>{language === 'en' ? 'Platform Info' : 'Maklumat Portal'}</span>
             </button>
             <a
               href="https://developer.data.gov.my"
@@ -359,7 +388,7 @@ export default function App() {
               onClick={() => setReportModalOpen(true)}
               className="hover:text-white transition-colors"
             >
-              Export Report
+              {t.exportReport}
             </button>
           </div>
         </div>
