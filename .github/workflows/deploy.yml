@@ -57,11 +57,17 @@ jobs:
           publish_dir: ./dist
           force_orphan: true
 
-      - name: Deploy to Vercel (Full-Stack Gateway)
-        if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master') && secrets.VERCEL_TOKEN != ''
-        uses: amondnet/vercel-action@v25
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          vercel-args: '--prod'
+      - name: Deploy to Vercel (Optional)
+        if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
+        run: |
+          if [ -n "$VERCEL_TOKEN" ]; then
+            echo "Deploying to Vercel production..."
+            npx --yes vercel --token "$VERCEL_TOKEN" --prod --yes
+          else
+            echo "Notice: VERCEL_TOKEN secret not configured in GitHub repository. Skipping CLI deployment."
+            echo "If you connected this repository directly in the Vercel Dashboard, Vercel will build and deploy automatically."
+          fi
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
