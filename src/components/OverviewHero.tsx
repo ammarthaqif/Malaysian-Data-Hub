@@ -1,6 +1,7 @@
 import React from 'react';
 import { Search, Database, ArrowRight, BarChart3, Radio, ShieldCheck, ExternalLink, Heart } from 'lucide-react';
 import { Language, TRANSLATIONS } from '../data/translations';
+import heroBgImage from '../assets/images/malaysia_data_horizon_1793233795776.jpg';
 
 interface OverviewHeroProps {
   onSearch: (query: string) => void;
@@ -33,7 +34,7 @@ export const OverviewHero: React.FC<OverviewHeroProps> = ({
       {/* Background Graphic with Scrim */}
       <div className="absolute inset-0 z-0 opacity-25 mix-blend-luminosity">
         <img
-          src="/src/assets/images/malaysia_data_horizon_1793233795776.jpg"
+          src={heroBgImage}
           alt="Putrajaya and Kuala Lumpur Civic Infrastructure"
           referrerPolicy="no-referrer"
           className="w-full h-full object-cover object-center"

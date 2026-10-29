@@ -22,24 +22,24 @@ Developed by **Ammar Thaqif** (`ammarthaqif.ar@gmail.com`).
 
 ## Instant Deployment
 
-### Deploy to Vercel (Minimal Action Required)
+### 1. GitHub Pages Deployment (Free Static Hosting)
 
-1. **Import Repository**: In your Vercel Dashboard, click **Add New Project** and select this GitHub repository.
-2. **Vercel Settings**:
-   - **Framework Preset**: Vite (detected automatically from `vercel.json`)
-   - **Build Command**: `npm run build`
-   - **Output Directory**: `dist`
-3. **Environment Variables**:
-   - `GEMINI_API_KEY`: *(Optional)* Your Google Gemini API Key for AI Trend Projections.
-4. Click **Deploy**. The app will be live with full frontend and serverless API proxy routes!
+The included GitHub Actions workflow (`.github/workflows/deploy.yml`) is fully automated:
+1. Push your code to the `main` (or `master`) branch.
+2. The workflow automatically compiles the project and publishes the production bundle directly to the `gh-pages` branch.
+3. In your GitHub repository:
+   - Go to **Settings** → **Pages**.
+   - Under **Build and deployment** > **Source**, choose **Deploy from a branch**.
+   - Select **Branch**: `gh-pages` and folder: `/ (root)`, then click **Save**.
+4. Your website will be live at `https://<your-username>.github.io/<repo-name>/` with no blank screen or 404 errors!
 
-### GitHub Actions CI/CD
+### 2. Vercel Deployment (Full-Stack Gateway with Serverless API)
 
-A pre-configured pipeline is included in `.github/workflows/deploy.yml`. Whenever you push to `main` or open a PR, GitHub Actions automatically:
-- Installs dependencies
-- Runs TypeScript syntax & type checks (`npm run lint`)
-- Builds the production bundle (`npm run build`)
-- Generates deployment artifacts
+The repository includes `vercel.json` and `.npmrc` configured with `--legacy-peer-deps` to guarantee zero `ERESOLVE` errors:
+1. In your **Vercel Dashboard**, click **Add New Project** and select this repository.
+2. Vercel automatically detects the Vite framework and executes `npm install --legacy-peer-deps`.
+3. (Optional) In **Environment Variables**, add `GEMINI_API_KEY` for machine-learning trend projections.
+4. Click **Deploy**. Both the client and the `/api/*` serverless routes will be live instantly.
 
 ---
 
